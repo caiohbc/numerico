@@ -16,6 +16,9 @@ def linear_function(params: tuple, x: float):
     return y
 
 def simpson_integration(intervals: int, function_params: tuple, integration_limits: tuple):
+    if intervals <= 1 or (intervals % 2) != 0:
+        raise ValueError(f'O número de subintervalos deve ser um natural par e diferente de zero. Fornecido: {intervals}')
+
     step = (integration_limits[1] - integration_limits[0]) / intervals
     accumulator: float = 0
 
