@@ -19,14 +19,14 @@ def simpson_integration(intervals: int, function_params: tuple, integration_limi
     step = (integration_limits[1] - integration_limits[0]) / intervals
     accumulator: float = 0
 
-    for i in range(intervals - 1):
+    for i in range(intervals):
         f_i = linear_function(function_params, (i * step) + integration_limits[0])
 
         if i == 0:
             accumulator += f_i
             continue
         
-        if i == (intervals - 1):
+        if i == intervals:
             accumulator += f_i
             continue
         
