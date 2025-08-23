@@ -44,6 +44,7 @@ GOOGLE_MAPS_AREA = 642000
 
 points = get_points(POINTS_PATH)
 
+# f(x) = m*x + b
 lines = np.array([], dtype=[('m', float), ('b', float)])
 areas = []
 
@@ -55,11 +56,11 @@ for i in range(len(points) - 1):
     areas.append(area)
 
 total_area = sum(areas)
-relative_error = 100 * ((GOOGLE_MAPS_AREA - total_area) / total_area)
+relative_error = 100 * abs((total_area - GOOGLE_MAPS_AREA) / GOOGLE_MAPS_AREA)
 
 print('\nÁrea total através das retas interpoladas:')
-print(f'{round(total_area, 3)} metros quadrados\n')
+print(f'{round(total_area, 3)} m²\n')
 print('Área calculada pelo Google Maps:')
-print(f'{GOOGLE_MAPS_AREA} metros quadrados\n')
+print(f'{GOOGLE_MAPS_AREA} m²\n')
 print('Erro relativo entre o cálculo e a área do Google Maps:')
 print(f'{round(relative_error, 2)} %')
