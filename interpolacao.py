@@ -58,9 +58,9 @@ for i in range(len(points) - 1):
 total_area = sum(areas)
 relative_error = 100 * abs((total_area - GOOGLE_MAPS_AREA) / GOOGLE_MAPS_AREA)
 
-print('\nÁrea total através das retas interpoladas:')
+print(f'\nÁrea total através da integração das retas interpoladas com {SUBINTERVALS} subintervalos:')
 print(f'{round(total_area, 3)} m²\n')
-print('Área calculada pelo Google Maps:')
+print('Área real dada pelo Google Maps:')
 print(f'{GOOGLE_MAPS_AREA} m²\n')
-print('Erro relativo entre o cálculo e a área do Google Maps:')
+print('Erro relativo entre o calculado e a área do Google Maps:')
 print(f'{round(relative_error, 2)} %')
