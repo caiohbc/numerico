@@ -52,10 +52,10 @@ for i in range(len(points) - 1):
     line = first_degree_interpolation(points[i], points[i+1])
     lines = np.append(lines, line)
 
-    area = simpson_integration(SUBINTERVALS, line, [points[i+1]['x'], points[i]['x']])
+    area = simpson_integration(SUBINTERVALS, line, [points[i]['x'], points[i+1]['x']])
     areas.append(area)
 
-total_area = sum(areas)
+total_area = abs(sum(areas))
 relative_error = 100 * abs((total_area - GOOGLE_MAPS_AREA) / GOOGLE_MAPS_AREA)
 
 print(f'\nÁrea total através da integração das retas interpoladas com {SUBINTERVALS} subintervalos:')
