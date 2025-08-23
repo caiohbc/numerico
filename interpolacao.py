@@ -1,31 +1,26 @@
 import numpy as np
 
-# Interpolação linear, gerando 12 retas
-# Integrar as retas usando método de simpson nos intervalos correspondentes
-# Considerar corretamente retas cuja área está fora do polígono
-# Calcular a diferença entre o valor interpolado e o valor real
-
 def get_points(path: str):
-    points_array = np.genfromtxt(path, delimiter=',', dtype=[('x', np.float64), ('y', np.float64)])
+    points_array = np.genfromtxt(path, delimiter=',', dtype=[('x', float), ('y', float)])
     return points_array
 
 def first_degree_interpolation(p0: tuple, p1: tuple):
     m = (p1['y'] - p0['y']) / (p1['x'] - p0['x'])
     b = ((p1['x'] * p0['y']) - (p0['x'] * p1['y'])) / (p1['x'] - p0['x'])
 
-    line = np.array((m, b), dtype=[('m', np.float64), ('b', np.float64)])
+    line = np.array((m, b), dtype=[('m', float), ('b', float)])
     return line
 
-def linear_function(params, x):
-    y = (params['m'] * x) + params['b']
+def linear_function(params: tuple, x: float):
+    y: float = (params['m'] * x) + params['b']
     return y
 
-def simpson_integration(intervals, function_params, range):
-    step = (range[1] - range[0]) / intervals
-    accumulator = 0
+def simpson_integration(intervals: int, function_params: tuple, integration_limits: tuple):
+    step = (integration_limits[1] - integration_limits[0]) / intervals
+    accumulator: float = 0
 
     for i in range(intervals - 1):
-        f_i = linear_function(function_params, (i * step) + range[0])
+        f_i = linear_function(function_params, (i * step) + integration_limits[0])
 
         if i == 0:
             accumulator += f_i
@@ -40,16 +35,31 @@ def simpson_integration(intervals, function_params, range):
         else:
             accumulator += 4 * f_i
     
-    integral_approximation = accumulator * (step / 3)
+    integral_approximation: float = accumulator * (step / 3)
     return integral_approximation
 
 POINTS_PATH = 'points.csv'
+SUBINTERVALS = 1000
+GOOGLE_MAPS_AREA = 642000
+
 points = get_points(POINTS_PATH)
 
-lines = np.array([], dtype=[('m', np.float64), ('b', np.float64)])
+lines = np.array([], dtype=[('m', float), ('b', float)])
+areas = []
 
 for i in range(len(points) - 1):
     line = first_degree_interpolation(points[i], points[i+1])
     lines = np.append(lines, line)
 
-print(lines)
+    area = simpson_integration(SUBINTERVALS, line, [points[i+1]['x'], points[i]['x']])
+    areas.append(area)
+
+total_area = sum(areas)
+relative_error = 100 * ((GOOGLE_MAPS_AREA - total_area) / total_area)
+
+print('\nÁrea total através das retas interpoladas:')
+print(f'{round(total_area, 3)} metros quadrados\n')
+print('Área calculada pelo Google Maps:')
+print(f'{GOOGLE_MAPS_AREA} metros quadrados\n')
+print('Erro relativo entre o cálculo e a área do Google Maps:')
+print(f'{round(relative_error, 2)} %')
